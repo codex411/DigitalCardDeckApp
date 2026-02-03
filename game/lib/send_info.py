@@ -1,29 +1,51 @@
 """
-This file has a couple helper functions
-providing the users the ability to send
-data to the arduino in string form through
-I2C bus.
+E-paper display communication interface.
+
+This module provides functions to send card information to the Arduino
+controller via I2C bus, which then updates the e-paper displays.
 """
 
 import smbus
 
+# Initialize I2C bus (bus 1 for Raspberry Pi)
 bus = smbus.SMBus(1)
 
-# This is the address setup in arduino program
-address = 0x04
+# I2C address configured in Arduino program
+ARDUINO_ADDRESS = 0x04
 
-def __StringToBytes(value):
-    retVal = []
-    for c in value:
-        retVal.append(ord(c))
-    return retVal
+
+def _string_to_bytes(value):
+    """Convert a string to a list of byte values.
+
+    Args:
+        value (str): String to convert.
+
+    Returns:
+        list: List of integer byte values.
+    """
+    return [ord(c) for c in value]
+
 
 def writeData(value):
-    print("Writing {}".format(value))
-    byteValue = __StringToBytes(value)
-    bus.write_i2c_block_data(address, 0x00, byteValue)
+    """Send card information to Arduino via I2C.
+
+    Args:
+        value (str): Card information string to display (e.g., "Red A Hearts").
+
+    Returns:
+        int: Status code (-1 indicates completion).
+    """
+    print(f"Writing to display: {value}")
+    byte_value = _string_to_bytes(value)
+    bus.write_i2c_block_data(ARDUINO_ADDRESS, 0x00, byte_value)
     return -1
 
+
 def readData():
-    data = bus.read_byte(address)
+    """Read data from Arduino via I2C.
+
+    Returns:
+        int: Byte value read from Arduino.
+    """
+    data = bus.read_byte(ARDUINO_ADDRESS)
     return data

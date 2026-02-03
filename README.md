@@ -1,78 +1,194 @@
-# Anycard ePlaying-cards
-Software and hardware project for e-paper based playing card deck.
+# Digital Card Deck System
 
-## Anycard Product Mission
-Fun and new card game product that provides users the flexibility to play as many games as they wish with the use of just one digital card deck.
+A modern e-paper based playing card system that enables multiple card games using a single digital deck. This project combines RFID technology, e-paper displays, and a Python game engine to create an interactive card gaming experience.
 
-## Target Users
-Anyone that might enjoy a card game from ages 4-99+
+## 🎯 Overview
 
-## User Stories
-* As a player, I want to be able to hold at least 4 digital cards in my hand.
-* As a player, I want to be able to refresh a card without any latency.
-* As a player, I want the ecard controller to keep track of my game score.
-* As a player, I want the ecard controller to keep a history of game play.
-* As a player, I want the ability to save an ongoing game state.
-* As a player, I want the ecards to update to a different game in less than 5 seconds.
-* As a player, I want to be able to play games of up to four people.
-* As a player, I want to have an interface to setup games.
+The Digital Card Deck System transforms traditional card games into a digital experience. Players use physical e-paper cards that can dynamically display different card values, controlled by a central game management system. The system supports multiple card games and can handle up to four players.
 
-# System Design
-The implementation of this product will be mainly through the use of e-paper displays to display each card value. This technology is the ideal candidate for this implementation as it is very low power and it mimics the look of ink on paper. The system will need a central computer to manage and store the card games, which will be implemented with the use of a small microcontroller or a single board computer enabled with a wifi, bluetooth or RFID module in order to communicate with the ecards. Please see the system design diagram below and a description of the product flow and of each component:
+## ✨ Features
 
-![SystemDesign](doc/AnycardSystemDesign.png)
+- **Multi-Game Support**: Play different card games with the same physical deck
+- **E-Paper Display**: Low-power, paper-like display technology for authentic card feel
+- **RFID Integration**: Automatic card identification and tracking
+- **Game Management**: Central controller handles shuffling, dealing, scoring, and game rules
+- **Player Support**: Designed for 2-4 players
+- **Game State Management**: Save and resume game progress
 
-## Product Flow
-At the start of a game, each player will have a number of cards that will initially be flushed or wiped out from any content. The player must then select a game to play using the user interface integrated into the Deck Dock, the player must place their cards within the card ports to shuffle their hand and the Deck Dock should provide the players with a unique set of cards according to the chosen game. As the players begin to play and a card needs to be drawn, players shall place the played card in the card port to refresh the card value to an unused card in the game.
+## 🎮 Supported Games
 
-## Deck Dock Controller
-The application will have a Deck Dock controller which will be tasked with game management. The operations for game management are the following:
-* Shuffle cards
-* Deal cards
-* Point calculations and distribution
-* Game rules
-* Game selection
-* Score management
-* Keep memory of card distribution and card graveyard
-* Display information
+- **War**: Classic card battle game
+- **Brisca**: Spanish card game (40-card deck)
+- **Poker**: Traditional poker (52-card deck)
+- **Blackjack**: Casino-style blackjack
+- **Go Fish**: Family-friendly card matching game
+
+## 🏗️ Architecture
+
+### System Components
+
+```
+┌─────────────────┐
+│  Game Engine    │  ← Manages game logic, rules, and state
+├─────────────────┤
+│  RFID Reader    │  ← Identifies physical cards
+├─────────────────┤
+│  E-Paper Driver │  ← Updates card displays
+├─────────────────┤
+│  GUI Interface  │  ← User interaction and game selection
+└─────────────────┘
+```
+
+### Software Design
+
+The system consists of three main components:
+
+1. **Game Engine**: Core framework managing game rules, card distribution, scoring, and game state
+2. **RFID Driver**: Handles communication between physical cards and the game engine
+3. **GUI Interface**: Touch-screen interface for game selection and settings
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Python 3.x
+- Raspberry Pi (for hardware integration)
+- MFRC522 RFID Reader
+- E-paper displays
+- Kivy (for GUI)
+
+### Installation
+
+1. Clone the repository:
+```bash
+git clone <repository-url>
+cd digital-card-deck
+```
+
+2. Install dependencies:
+```bash
+pip install -r requirements.txt
+```
+
+3. Configure hardware connections (see Hardware Setup section)
+
+### Running the Application
+
+**GUI Mode:**
+```bash
+python app.py
+```
+
+**Command Line Mode:**
+```bash
+python test.py
+```
+
+## 🎲 Game Flow
+
+1. **Game Selection**: Choose a game from the available options
+2. **Card Registration**: Place physical cards in the card port to register them
+3. **Deal Cards**: System automatically deals cards to each player
+4. **Gameplay**: Players place cards in the card port to refresh/play cards
+5. **Score Tracking**: System automatically tracks scores and game state
+
+## 🔧 Hardware Setup
+
+### Raspberry Pi and RFID Wiring
+
+The system uses MFRC522 RFID reader connected via SPI to the Raspberry Pi. See `doc/rasppi_rfid.png` for wiring diagram.
 
 ### Card Port
-The card port is the main interface between the ecards and the game Deck Dock controller. This interface will server as a power supply and I/O interface for the ecards in order to give each card a new value.
 
-### User Interface
-The UI will be implemented through a touch screen integrated within the Deck Dock. The interface first servers as a means for the user to select their game, game preferences, player selection and other game settings.
+The card port serves as the interface between e-cards and the game controller, providing:
+- Power supply for e-paper displays
+- I/O interface for card updates
+- RFID reading capability
 
-## Players
-In the system design below notice Player 1 and Player 2 are shown with ecards representing the hand for each player. The ecards will be equipped with an RFID tag which will be used by the Anycard Deck Dock to identify the card that was played and what card value it contains. The players will need to interface with the card port in order to refresh the cards and continue game play.
+## 📁 Project Structure
 
-## Software Design
-The software within the application will be tasked with managing the game while at the same time communicating with the ecard interface in order to properly account for game score and card values.The software implementation will consist of two main components as shown below: the GUI and the eCard driver.
-![SoftwareDesign](doc/SoftwareDesign.png)
+```
+digital-card-deck/
+├── app.py                 # Main GUI application
+├── game/                  # Game implementations
+│   ├── War.py            # War game logic
+│   ├── Briscas.py        # Brisca game logic
+│   └── lib/              # Core game framework
+│       ├── game.py       # Base game engine
+│       ├── deck.py       # Card deck management
+│       ├── rfid_info.py  # RFID communication
+│       └── send_info.py  # E-paper communication
+├── hw/                   # Hardware integration code
+│   ├── arduino/          # Arduino firmware
+│   └── raspi/           # Raspberry Pi scripts
+└── doc/                  # Documentation and diagrams
+```
 
-### GUI
-The GUI component will be implemented initially as a touch screen interface integrated with the Deck Dock, allowing the user to select games and game settings. The interface will be implemented as a simple python application. The application will be directly communicating with both the game engine and the Deck Dock.
+## 🎯 User Stories
 
-### eCard Driver
-The software for this component will handle the interaction between the ecards and the game engine.
+- ✅ Hold at least 4 digital cards in hand
+- ✅ Refresh cards without latency
+- ✅ Automatic score tracking
+- ✅ Game play history
+- ✅ Save ongoing game state
+- ✅ Switch games in under 5 seconds
+- ✅ Support up to 4 players
+- ✅ Intuitive game setup interface
 
-### Game Engine
-The game engine component will be resposible for all tasks related to game play and game rules. It will be the base framework for the system and will implement the functionalities specified section:
-[Deck Dock Controller](#Deck-Dock-Controller)
+## 🔬 Technology Stack
 
-### Games
-Each game rule set will be a separate component in order have the ability to scale up each game and the game engine component simultaneously. Each game should be easy integrated into the application.
+- **Language**: Python 3
+- **GUI Framework**: Kivy
+- **Hardware Communication**: 
+  - MFRC522 (RFID)
+  - I2C (Arduino communication)
+  - SPI (RFID interface)
+- **Card Definition**: YAML configuration files
+- **Display Technology**: E-paper (electronic paper)
 
-# MVP
-The basic and minimum need for this product is to have a method of refreshing cards without latency and update the digital deck of at least 4 electronic cards without latency. The functionality shall be seamless as it would be when using a normal paper card deck. For game play, the goal is to create a simple prototype game which will show case the functionality of each of the components listed above.
+## 📊 E-Paper Technology
 
-# Prototype
-![PrototypeSetup](doc/proto_setup.jpg)
+Electronic paper (e-paper) is the ideal display technology for this project:
 
-### Raspberry Pi and RFID Wireup
-![RPi-RFID-Wireup](doc/rasppi_rfid.png)
+- **Low Power**: Minimal power consumption, perfect for battery-powered cards
+- **Flexible**: Can be integrated into card-like form factors
+- **Paper-like**: Mimics the appearance of traditional playing cards
+- **Persistent Display**: Maintains image without power
 
-# E Cards Techonology
-The electronic cards would be implemented using electronic paper, a technology that uses very low power consumption, is flexible and mimics the look of real paper. Electronic paper uses electronic ink which is comprised of millions of microcapsules that contain a positive or negative charge, when provided a charge, the microcapsules move through a microscopic liquid towards the face of the card.
+E-paper uses electronic ink comprised of microcapsules containing positive or negative charges. When provided with a charge, these microcapsules move through a microscopic liquid to display the card value.
 
-![Image showing simple explanation of how epaper displays function.](https://www.smartcity-displays.com/wp-content/uploads/2017/07/how-does-e-paper-work-1.gif)
-* Source: https://www.smartcity-displays.com/wp-content/uploads/2017/07/how-does-e-paper-work-1.gif
+## 📝 Development
+
+### Adding a New Game
+
+1. Create a new game class inheriting from `Game` in `game/lib/game.py`
+2. Implement required methods: `create_hands()`, `start()`, `update()`
+3. Add game configuration to `app.py` games dictionary
+4. Create deck configuration YAML if needed
+
+### Testing
+
+Run the test suite:
+```bash
+python test.py
+```
+
+## 📄 License
+
+Copyright 2019 Amanda Justiniano
+
+## 🤝 Contributing
+
+Contributions are welcome! Please ensure that:
+- Core game logic remains unchanged
+- New features maintain backward compatibility
+- Code follows existing style conventions
+
+## 📚 References
+
+- [Bicycle Cards - How to Play War](https://bicyclecards.com/how-to-play/war/)
+- [NH Fournier - Card Game Rules](https://www.nhfournier.es/en/como-jugar/)
+
+---
+
+**Note**: This project is designed for educational and prototyping purposes. Hardware setup requires Raspberry Pi and compatible RFID/e-paper hardware.

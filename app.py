@@ -1,7 +1,11 @@
-""" Accordion with Kivy
+"""
+Digital Card Deck Application
 
-    Example code from kivy documentation:
-    Link: https://kivy.org/doc/stable/api-kivy.uix.accordion.html
+Main GUI application for the Digital Card Deck System.
+Uses Kivy framework for the user interface.
+
+Based on Kivy Accordion example:
+https://kivy.org/doc/stable/api-kivy.uix.accordion.html
 """
 
 import logging
@@ -15,8 +19,7 @@ from kivy.app import App
 
 from game.War import War
 
-""" TODO: Port this to a json file
-"""
+# TODO: Port game configurations to a JSON/YAML file for better maintainability
 GAME = ""
 games_available = {
                 'Brisca':
@@ -66,7 +69,7 @@ games_available = {
               }
 
 
-class AnyCardApp(App):
+class DigitalCardDeckApp(App):
 
     def register_cb(self, btn):
         self.game.init()
@@ -86,12 +89,10 @@ class AnyCardApp(App):
         self.root.cols=2
         game_titles = list(games_available.keys())
         for i in range(len(game_titles)):
-            """ Add each game title to accordion
-            """
+            # Add each game title to accordion
             self.item = AccordionItem(title='{}'.format(game_titles[i]))
 
-            """ Left hand side; description for each game
-            """
+            # Left column: game description and details
             left_col = GridLayout(cols=1)
             left_col.add_widget(Label(text='[size=35]Play [b]{}[/b][/size]'.format(game_titles[i]),
                                       markup=True,
@@ -110,8 +111,7 @@ class AnyCardApp(App):
 
             self.item.add_widget(left_col)
 
-            """ Right hand side; register cards and game start
-            """
+            # Right column: card registration and game controls
             # self.game = game_titles[i]
             # Create buttons
             self.register = Button(text='Register')
@@ -134,4 +134,4 @@ class AnyCardApp(App):
 
 
 if __name__ == '__main__':
-    AnyCardApp().run()
+    DigitalCardDeckApp().run()

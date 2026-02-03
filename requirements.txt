@@ -1,0 +1,16 @@
+# Digital Card Deck System - Python Dependencies
+
+# GUI Framework
+kivy>=1.11.0
+
+# YAML Configuration
+PyYAML>=5.1
+
+# Hardware Communication (Raspberry Pi)
+# Note: These may require system-level packages
+# smbus - typically installed via: sudo apt-get install python3-smbus
+# RPi.GPIO - typically installed via: sudo apt-get install python3-rpi.gpio
+
+# RFID Reader Library
+# mfrc522 - Install from: https://github.com/mxgxw/MFRC522-python
+# Note: This library may need to be installed manually or via pip if available
